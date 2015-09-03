@@ -8,5 +8,5 @@ import retrofit.http.GET;
 public interface SimpleRetrofit {
 
     @GET("/shots/21603")
-    Short getShot();
+    Shot getShot();
 }
