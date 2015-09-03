@@ -5,7 +5,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import retrofit.Callback;
 import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         new HttpAsyncTask().execute();
     }
 
-    class HttpAsyncTask extends AsyncTask<Void, Void, Shot> {
+    class HttpAsyncTask extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -26,22 +29,32 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(Shot shot) {
-            Toast.makeText(getApplicationContext(), "Title : " + shot.getTitle() + " URL : " + shot.getUrl(), Toast.LENGTH_LONG).show();
-
-            super.onPostExecute(shot);
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
         }
 
         @Override
-        protected Shot doInBackground(Void... params) {
+        protected Void doInBackground(Void... v) {
             RestAdapter restAdapter = new RestAdapter.Builder()
                     .setEndpoint("http://api.dribbble.com/")
                     .build();
 
             //SimpleRetrofit interface
             SimpleRetrofit retrofit = restAdapter.create(SimpleRetrofit.class);
-            Shot shot = retrofit.getShot();
-            return shot;
+            retrofit.getShotByIdWithCallback(21603, new Callback<Shot>() {
+                @Override
+                public void success(Shot shot, Response response) {
+                    Toast.makeText(getApplicationContext(), "Title : " + shot.getTitle() + " URL : " + shot.getUrl(), Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+
+                }
+            });
+//            Shot shot = retrofit.getShotById(30000);
+//            return shot;
+            return null;
         }
     }
 }
