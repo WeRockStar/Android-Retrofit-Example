@@ -17,4 +17,7 @@ public interface SimpleRetrofit {
 
     @GET("/shots/{id}")
     void getShotByIdWithCallback(@Path("id") int id, Callback<Shot> callback);
+
+    @GET("/shots/popular")
+    void getShotsByPopular(Callback<ShotList> callback);
 }
